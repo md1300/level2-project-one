@@ -1,4 +1,4 @@
-import { z } from "zod"
+import {  z } from "zod"
 
 const userNameValidationSchemaWithZod=z.object({
     firstName:z.string().min(1).max(20),
@@ -24,6 +24,7 @@ const userNameValidationSchemaWithZod=z.object({
   
   const studentValidationSchemaWithZod=z.object({
     id:z.string(),
+    password:z.string().max(20),
     name:userNameValidationSchemaWithZod,
     gender:z.enum(['Male', 'FeMale','other']),
     dateOfBirth:z.string(),
@@ -36,7 +37,8 @@ const userNameValidationSchemaWithZod=z.object({
     gurdian:guradianValidationSchemaWithZod,
     localGuradian:localGuradianValidationSchemaWithZod,
     profileImg:z.string(),
-    isActive:z.enum(['active','blocked']).default('active')
+    isActive:z.enum(['active','blocked']).default('active'),
+    isDelete:z.boolean(),
   });
 
   export default studentValidationSchemaWithZod 

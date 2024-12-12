@@ -28,8 +28,12 @@ const createStudent = async (req: Request, res: Response) => {
     //will call service func to send this data
     
     const zodParseData=studentValidationSchemaWithZod.parse(studentData)
+
+    
     
     const result = await studentServices.createStudentIntoDB(zodParseData);
+
+ 
 
     //send response
 
@@ -65,8 +69,12 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'students are retrieved successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message:error.message || 'something went wrong',
+      data: error,
+    });
   }
 };
 
@@ -79,13 +87,36 @@ const getSingleStudent = async (req: Request, res: Response) => {
       message: 'student is retrieved successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message:error.message || 'something went wrong',
+      data: error,
+    });
   }
 };
+const deleteStudent=async(req:Request,res:Response)=>{
+  try{
+    const{studentId}=req.params
+    const result=await studentServices.deleteStudentFromDB(studentId)
+    res.status(200).json({
+      success:true,
+      message:'student is deleted successfully',
+      data:result,
+    })
+  }
+  catch(error:any){
+    res.status(500).json({
+      success:false,
+      message:error.message || 'something went wrong',
+      data:error
+    })
+  }
+}
 
 export const studentController = {
   createStudent,
   getAllStudents,
   getSingleStudent,
+  deleteStudent,
 };

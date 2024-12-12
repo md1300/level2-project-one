@@ -21,7 +21,7 @@ import { TStudent } from './student.interface';
 
 const createStudentIntoDB=async(studentData:TStudent)=>{
 
-  if(Student.isUserExists(studentData.id)){
+  if(await Student.isUserExists(studentData.id)){
     throw new Error('user already exists')
   }
   const result =await Student.create(studentData) //built in static method provide  from mongoose
@@ -35,7 +35,13 @@ const getAllStudentsFromDB = async () => {
 };
 
 const getsingleStudentFromDB = async (id: string) => {
-  const result = await Student.findOne({ id });
+  // const result = await Student.findOne({ id });
+  const result = await Student.aggregate([{$match:{id:id}}])
+  return result;
+};
+
+const deleteStudentFromDB = async (id: string) => {
+  const result = await Student.updateOne({ id },{isDelete:true});
   return result;
 };
 
@@ -43,4 +49,5 @@ export const studentServices = {
   createStudentIntoDB,
   getAllStudentsFromDB,
   getsingleStudentFromDB,
+  deleteStudentFromDB,
 };
